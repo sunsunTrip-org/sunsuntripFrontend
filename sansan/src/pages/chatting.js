@@ -13,13 +13,18 @@ const Chatting = () => {
   return (
     <PageWrapper>
 
-      <ChatContainer>
-        {messages.map((msg, idx) => (
-          <MessageBubble key={idx} from={msg.from}>
-            {msg.text}
-          </MessageBubble>
-        ))}
-      </ChatContainer>
+    <ChatContainer>
+      {messages.map((msg, idx) => (
+        <MessageBubble key={idx} from={msg.from}>
+          {msg.text}
+        </MessageBubble>
+      ))}
+
+      <FloatingButton onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+        ✈️ + 일정 생성하기
+      </FloatingButton>
+    </ChatContainer>
+
     </PageWrapper>
   );
 };
@@ -39,7 +44,9 @@ const ChatContainer = styled.div`
   flex-direction: column;
   padding: 20px;
   overflow-y: auto;
+  position: relative; // 이거 추가!
 `;
+
 
 const MessageBubble = styled.div`
   max-width: 80%;
@@ -55,5 +62,23 @@ const MessageBubble = styled.div`
   border-bottom-right-radius: ${({ from }) => (from === 'user' ? '0px' : '15px')};
   border-bottom-left-radius: ${({ from }) => (from === 'user' ? '15px' : '0px')};
 `;
+
+const FloatingButton = styled.button`
+  align-self: flex-end;
+  margin: 50px 0;
+  background-color: #000000;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 15px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: rgb(55, 58, 61);
+  }
+`;
+
 
 export default Chatting;

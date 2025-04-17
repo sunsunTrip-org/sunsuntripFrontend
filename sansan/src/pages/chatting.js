@@ -2,6 +2,8 @@
 
 import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from "react-router-dom";
+import Header from '../components/_Layout/Header';
 
 const Chatting = () => {
   const messages = [
@@ -10,6 +12,7 @@ const Chatting = () => {
     { from: 'server', text: '여행 기간을 첫째날 ~ 마지막 날짜로 설명해주세요' },
 ];
 
+  const navigate = useNavigate();
   return (
     <PageWrapper>
 
@@ -20,7 +23,7 @@ const Chatting = () => {
         </MessageBubble>
       ))}
 
-      <FloatingButton onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+      <FloatingButton onClick={() => navigate("/map")}>
         ✈️ + 일정 생성하기
       </FloatingButton>
     </ChatContainer>
@@ -33,7 +36,7 @@ const PageWrapper = styled.div`
   flex-direction: column;
   height: 80vh;
   background: #ffffff;
-  margin-top : 40px;
+  margin-top : 50px;
   
 `;
 

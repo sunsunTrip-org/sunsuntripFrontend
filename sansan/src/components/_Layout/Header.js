@@ -24,7 +24,7 @@ const Header = () => {
 
 
 const HeaderContainer = styled.header`
-    margin-top : 80px;
+    margin-top : 70px;
     display: flex;
     justify-content: center;
 `;

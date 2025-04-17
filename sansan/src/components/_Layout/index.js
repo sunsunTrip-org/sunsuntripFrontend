@@ -1,31 +1,65 @@
 import React from 'react';
-import Header from './Header';
-import Sidebar from './Sidebar';
+import SideChat from './SideChat';
+import SideMap from "./SideMap";
 import styled from 'styled-components';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {BrowserRouter as Router, Routes, Route, Outlet} from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import "../style.css"
 import Chatting from '../../pages/chatting';
+import Map from '../../pages/map';
+import Header from "./Header";
 
 const Index = () => {
+    const location = useLocation();
+    const isMapPage = location.pathname === "/map";
+
+    const DefaultLayout = () => {
+        return (
+            <LayoutContainer>
+                <Wrap>
+                    <SideChat />
+                    <ContentContainer>
+                        <Header/>
+                        <MainContent>
+                            <Outlet />
+                        </MainContent>
+                    </ContentContainer>
+                </Wrap>
+            </LayoutContainer>
+        );
+    };
+
+    const MapLayout = () => {
+        return (
+            <LayoutContainer>
+                <Wrap style={{ maxWidth: '100%' }}>
+                    <SideMap />
+                    <MapContentContainer>
+                        <Outlet />
+                    </MapContentContainer>
+                </Wrap>
+            </LayoutContainer>
+        );
+    };
+
+
     return (
-        <LayoutContainer>
-            <Wrap>
-                <Sidebar />
-                <ContentContainer>
-                    <Header />
-                    <MainContent>
-                        <Routes>
-                            <Route path="/" element={<Chatting />} />
-                        </Routes>
-                    </MainContent>
-                </ContentContainer>
-                <Widget/>
-            </Wrap>
-        </LayoutContainer>
+        <Routes>
+            <Route element={<DefaultLayout />}>
+                <Route path="/" element={<Chatting />} />
+            </Route>
+
+            <Route element={<MapLayout />}>
+                <Route path="/map" element={<Map />} />
+            </Route>
+        </Routes>
     );
 };
-
+const MapContentContainer = styled.div`
+    width: 100%;
+    height: 100vh;
+`;
 const LayoutContainer = styled.div`
     font-family: 'SUIT', sans-serif;
     color: #000;
@@ -64,15 +98,5 @@ const MainContent = styled.main`
     padding: 0 20px;
     box-sizing: border-box;
 `;
-
-const Widget = styled.div`
-    width: 305px;
-    position: fixed;
-    top: 52px;
-
-    @media screen and (max-width: 1360px) {
-        display: none;
-    }
-`
 
 export default Index;

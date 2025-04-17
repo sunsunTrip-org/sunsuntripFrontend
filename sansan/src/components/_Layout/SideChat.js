@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/image/logo.jpg"
 
-const Sidebar = () => {
+const SideChat = () => {
     const navigate = useNavigate();
     return (
         <SidebarContainer>
@@ -11,11 +11,6 @@ const Sidebar = () => {
                 <LogoImage src={logo} alt="로고" />SANSANTRIP
             </LogoContainer>
 
-            <StyledUl>
-                <SideLi onClick={() => navigate("/retire")}>
-                    {/* <StyledImage src={image} width={"100%"} alt="노후자금 계산하기" /> */}
-                </SideLi>
-            </StyledUl>
         </SidebarContainer>
     );
 };
@@ -47,7 +42,7 @@ const LogoContainer = styled.div`
     font-size: 1.1rem;
     color: #333;
     gap: 10px;
-     font-family: 'SUIT', sans-serif;
+    font-family: 'SUIT', sans-serif;
 `;
 
 const LogoImage = styled.img`
@@ -58,14 +53,5 @@ const LogoImage = styled.img`
 `;
 
 
-const StyledUl = styled.ul`
-    list-style: none;
-    padding: 0 20px;
-`;
 
-const SideLi = styled.li`
-    margin: 20px 0px;
-    cursor: pointer;
-`;
-
-export default Sidebar;
+export default SideChat;

@@ -50,7 +50,7 @@ const SideMap = () => {
     return (
         <SidebarContainer>
             <LogoContainer onClick={() => navigate("/")}>
-                <LogoImage src={logo} alt="로고" />SANSANTRIP
+                <LogoImage src={logo} alt="로고" />SUNSUNTRIP
             </LogoContainer>
 
             <ContentWrapper>

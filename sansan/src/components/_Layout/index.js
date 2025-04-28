@@ -2,8 +2,8 @@ import React from 'react';
 import SideChat from './SideChat';
 import SideMap from "./SideMap";
 import styled from 'styled-components';
-import {BrowserRouter as Router, Routes, Route, Outlet} from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import {Routes, Route, Outlet} from "react-router-dom";
+// import { useLocation } from "react-router-dom";
 
 import "../style.css"
 import Chatting from '../../pages/chatting';
@@ -11,8 +11,7 @@ import Map from '../../pages/map';
 import Header from "./Header";
 
 const Index = () => {
-    const location = useLocation();
-    const isMapPage = location.pathname === "/map";
+    // const location = useLocation();
 
     const DefaultLayout = () => {
         return (

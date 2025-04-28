@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useNavigate } from "react-router-dom";
-import sampleMap from '../assets/image/map.png'; // 너가 사용할 지도 이미지 경로로 바꿔!
+// import { useNavigate } from "react-router-dom";
+import sampleMap from '../assets/image/map.png';
 
 const Map = () => {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     return (
         <PageWrapper>
             <MapImage src={sampleMap} alt="지도" />

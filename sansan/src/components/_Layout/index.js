@@ -8,7 +8,6 @@ import {Routes, Route, Outlet} from "react-router-dom";
 import "../style.css"
 import Chatting from '../../pages/chatting';
 import Map from '../../pages/map';
-import Header from "./Header";
 
 const Index = () => {
     // const location = useLocation();
@@ -19,7 +18,6 @@ const Index = () => {
                 <Wrap>
                     <SideChat />
                     <ContentContainer>
-                        <Header/>
                         <MainContent>
                             <Outlet />
                         </MainContent>

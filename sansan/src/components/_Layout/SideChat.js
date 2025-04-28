@@ -1,17 +1,20 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/image/logo.jpg"
+import {FiImage, FiMic, FiSend} from "react-icons/fi";
 
 const SideChat = () => {
     const navigate = useNavigate();
+    const [searchTerm, setSearchTerm] = useState('');
+
     return (
         <SidebarContainer>
-            <LogoContainer onClick={() => navigate("/")}>
-                <LogoImage src={logo} alt="로고" />SUNSUNTRIP
-            </LogoContainer>
+                <LogoContainer onClick={() => navigate("/")}>
+                    <LogoImage src={logo} alt="로고" />SUNSUNTRIP
+                </LogoContainer>
 
-        </SidebarContainer>
+            </SidebarContainer>
     );
 };
 

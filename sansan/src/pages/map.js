@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import SideMap from "../components/_Layout/SideMap";
+import axios from "axios";
 
 const locationData = {
     "totalDistance": 24,
@@ -236,24 +237,14 @@ const locationData = {
 };
 
 const markerColors = [
-    "red",
-    "green",
-    "blue",
-    "orange",
-    "purple",
-    "pink",
-    "yellow",
-    "cyan",
-    "black",
+    "red", "green", "blue", "orange", "purple", "pink", "yellow", "cyan", "black",
 ];
 
 function getMapCenter(coords) {
     if (!coords.length) return { lat: 0, lng: 0 };
     if (coords.length === 1) return coords[0];
-
     const lats = coords.map((c) => c.lat);
     const lngs = coords.map((c) => c.lng);
-
     return {
         lat: (Math.min(...lats) + Math.max(...lats)) / 2,
         lng: (Math.min(...lngs) + Math.max(...lngs)) / 2,
@@ -266,6 +257,14 @@ const Map = () => {
 
     const markersRef = useRef([]);
     const infoWindowsRef = useRef([]);
+
+    // const [locationData, setLocationData] = useState(null);
+    const [routeId, setRouteId] = useState(1); // 임시로 1로 설정
+
+    // useEffect(() => {
+    //     // 임시: 초기 데이터 직접 설정 (나중에 API 호출로 대체 가능)
+    //     setLocationData(window.initialLocationData || null);
+    // }, []);
 
     useEffect(() => {
         if (!window.google || !window.google.maps) {
@@ -284,9 +283,9 @@ const Map = () => {
 
         markersRef.current.forEach((m) => m.setMap(null));
         markersRef.current = [];
+        infoWindowsRef.current.forEach((iw) => iw.close());
         infoWindowsRef.current = [];
 
-        // 기존에 추가한 polyline들 삭제용 (만약 관리하려면 별도 ref 필요)
         if (window.polylines) {
             window.polylines.forEach((pline) => pline.setMap(null));
         }
@@ -316,6 +315,12 @@ const Map = () => {
                 marker.addListener("click", () => {
                     infoWindowsRef.current.forEach((iw) => iw.close());
                     infoWindow.open({ anchor: marker, map });
+                    // setTimeout(() => {
+                    //     const btn = document.getElementById(`replace-btn-${place.id}`);
+                    //     if (btn) {
+                    //         btn.onclick = () => handleReplace(place.name);
+                    //     }
+                    // }, 0);
                 });
 
                 markersRef.current.push(marker);
@@ -346,8 +351,26 @@ const Map = () => {
             const center = getMapCenter(allPositions);
             map.setCenter(center);
         }
-    }, [map]);
+    }, [map, locationData]);
 
+    // const handleReplace = async (oldPlaceName) => {
+    //     if (!routeId) {
+    //         alert("routeId가 없습니다.");
+    //         return;
+    //     }
+    //     try {
+    //         const response = await axios.post(
+    //             `/api/route/${routeId}/replace`,
+    //             null,
+    //             { params: { oldPlaceName } }
+    //         );
+    //         // 응답으로 새 경로 데이터 받음
+    //         setLocationData(response.data);
+    //     } catch (error) {
+    //         console.error("교체 요청 실패:", error);
+    //         alert("장소 교체 요청 중 오류가 발생했습니다.");
+    //     }
+    // };
 
 
     return (

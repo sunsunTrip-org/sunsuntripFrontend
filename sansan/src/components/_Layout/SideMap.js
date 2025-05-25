@@ -5,48 +5,120 @@ import logo from "../../assets/image/logo.jpg"
 import TripDay from "../_element/TripDay";
 import exampleImg from "../../assets/image/example.jpg"
 
-const tripPlans = [
-    {
-        type: 'day',
-        title: '🌿1일차: 자연 경관과 액티비티 체험',
-        activities: [
-            '🚤 인와시로호(猪苗代湖) 탐방 🚴‍♀️',
-            '🚤 보트 타기: 잔잔한 물 위를 가르며 시원한 바람을 느껴봐요!',
-            '🚴‍♀️ 자전거 대여: 상쾌한 바람을 맞으며 호수를 따라 라이딩~ 🌿',
-            '📸 사진 촬영: 반짝이는 호수와 그림 같은 풍경을 배경으로 인생샷 찰칵! 📷✨',
-            '자연 속에서 몸과 마음을 힐링하는 하루, 기대되지 않나요? 🌿💙',
-        ],
-    },
-    {
-        type: 'image',
-        src: exampleImg,
-        alt: '여행 이미지',
-    },
-    {
-        type: 'day',
-        title: '✨ 2일차: 전통 마을과 자연 경관 즐기기',
-        activities: [
-            '🏡 오우치주쿠 방문 🌸',
-            '에도 시대의 정취가 고스란히 남아 있는 오우치주쿠(大内宿)! ⏳✨',
-            '🚶‍♂️ 옛 일본의 분위기 체험',
-            '📸 사진 촬영 & 역사 탐방',
-        ],
-    },
-    {
-        type: 'day',
-        title: '♨️3일차: 온천 체험과 지역 문화 즐기기',
-        activities: [
-            '🏞️ 이이자카 온천(飯坂温泉) 체험',
-            '🍚 온천욕 후, 전통 일본식 아침 식사 🍙✨',
-            '🛍️ 현지 시장 & 지역 음식 체험',
-            '🏮 전통 시장 탐방',
-            '🍜 후쿠시마 특산품 & 미식 투어',
-        ],
-    },
+
+const markerColors = [
+    "hsl(0, 60%, 45%)",     // red - 채도와 명도 낮춤
+    "hsl(120, 50%, 40%)",   // green
+    "hsl(210, 60%, 45%)",   // blue
+    "hsl(30, 60%, 45%)",    // orange
+    "hsl(270, 40%, 50%)",   // purple
+    "hsl(330, 50%, 55%)",   // pink
+    "hsl(50, 60%, 50%)",    // yellow
+    "hsl(180, 50%, 45%)",   // cyan
+    "hsl(0, 0%, 30%)",      // black (회색톤으로)
 ];
 
-const SideMap = () => {
+
+function generateTripPlans(dailyPlans) {
+    return dailyPlans.map((dayPlan, idx) => {
+        const dayNum = idx + 1;
+        const highlightColor = markerColors[idx % markerColors.length]; // 색 반복 방지용
+
+        const title = (
+            <>
+                <span style={{
+                backgroundColor: highlightColor,
+                color: 'white',
+                padding: '2px 6px',
+                userSelect: 'none'
+            }}>
+          {dayNum}일차 여행 코스
+        </span>
+            </>
+        );
+
+        // 음식은 아침, 점심, 저녁으로 분리
+        const meals = { 아침: [], 점심: [], 저녁: [] };
+        let foodCount = 0;
+
+        // 체험, 숙소 분리
+        const attractions = [];
+        const accommodations = [];
+
+        dayPlan.places.forEach(place => {
+            const { name, category, themes } = place;
+
+            if (category === 'FOOD') {
+                foodCount++;
+                if (foodCount === 1) meals['아침'].push(name);
+                else if (foodCount === 2) meals['점심'].push(name);
+                else meals['저녁'].push(name);
+            } else if (category === 'ATTRACTION') {
+                attractions.push({ name, themes });
+            } else if (category === 'ACCOMMODATION') {
+                accommodations.push(name);
+            }
+        });
+
+        // 각 섹션별 리스트 JSX 생성
+        const mealSection = (
+            <>
+                <strong>🍽️ 식사</strong>
+                <StyledList>
+                    {Object.entries(meals).map(([mealTime, places]) =>
+                        places.length > 0 ? (
+                            <li key={mealTime}>
+                                {mealTime} : {places.join(', ')}
+                            </li>
+                        ) : null
+                    )}
+                </StyledList>
+            </>
+        );
+
+        const attractionSection = (
+            <>
+                <strong>🎯 체험</strong>
+                <StyledList>
+                    {attractions.map(({ name, themes }, i) => (
+                        <li key={i}>
+                            {name} {themes.length > 0 ? `(${themes.join(', ')})` : ''}
+                        </li>
+                    ))}
+                </StyledList>
+            </>
+        );
+
+        const accommodationSection = (
+            <>
+                <strong>🏨 숙소</strong>
+                <StyledList>
+                    {accommodations.map((name, i) => (
+                        <li key={i}>{name}</li>
+                    ))}
+                </StyledList>
+            </>
+        );
+
+
+        return {
+            type: 'day',
+            title,
+            activities: [mealSection, attractionSection, accommodationSection],
+        };
+    });
+}
+
+
+
+
+
+
+
+const SideMap = ({dailyPlans}) => {
     const navigate = useNavigate();
+    const tripPlans = generateTripPlans(dailyPlans);
+
     return (
         <SidebarContainer>
             <LogoContainer onClick={() => navigate("/")}>
@@ -68,7 +140,7 @@ const SideMap = () => {
 };
 
 const SidebarContainer = styled.aside`
-    width: 380px;
+    width: 340px;
     padding: 50px 15px 0;
     position: fixed;
     top: 0;
@@ -109,6 +181,14 @@ const TripImage = styled.img`
     width: 100%;
     height: auto;
     object-fit: cover;
+`;
+
+const StyledList = styled.ul`
+  list-style-type: disc;  /* 작은 점 */
+  padding-left: 20px;     /* 들여쓰기 */
+  margin: 8px 0;
+  color: #444;
+  font-size: 14px;
 `;
 
 

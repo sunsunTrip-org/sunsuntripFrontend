@@ -5,11 +5,38 @@ import { useNavigate } from "react-router-dom";
 
 // server측 메시지
 const questions = [
-  '여행 목적을 설명해주세요 (힐링/자연/역사/맛집 등)',
+  '여행 목적을 설명해주세요 (자연/온천/전통문화/예술/축제 중)',
   '총 여행 기간을 설명해주세요 (1박 2일 등)',
   '동행 인원 수를 입력해주세요(본인 포함)',
   '특별히 가고 싶은 장소가 있다면 알려주세요',
 ];
+
+const themeMap = {
+  "자연": 1,
+  "온천": 2,
+  "전통문화": 3,
+  "예술": 4,
+  "축제": 5
+};
+
+function extractThemeIds(input) {
+  const selected = [];
+
+  for (const name in themeMap) {
+    if (input.includes(name)) {
+      selected.push(themeMap[name]);
+    }
+  }
+
+  return selected;
+}
+
+function extractDays(input) {
+  const match = input.match(/\d+/g); // 모든 숫자 찾기
+  if (!match) return 1;
+  return parseInt(match[match.length - 1]); // 마지막 숫자를 사용
+}
+
 
 const Chatting = () => {
   // server측 메시지 설정
@@ -35,6 +62,9 @@ const Chatting = () => {
     return null;
   })();
 
+  const [themeIds, setThemeIds] = useState([]);
+  const [days, setDays] = useState(null);
+
   // text 창 :: 답변 전송 또는 수정
   const handleSend = () => {
     if (!input.trim()) return;
@@ -48,6 +78,14 @@ const Chatting = () => {
     } else {
       // 새 답변 추가
       newMessages.push({ from: 'user', text: input });
+
+      if (currentStep === 0) {
+        setThemeIds(extractThemeIds(input)); // 테마 ID 추출
+      } else if (currentStep === 1) {
+        setDays(extractDays(input)); // 여행 일수 추출
+      }
+
+
       if (currentStep + 1 < questions.length) {
         newMessages.push({ from: 'server', text: questions[currentStep + 1] });
       }
@@ -66,6 +104,32 @@ const Chatting = () => {
 
   const handleInputKeyDown = (e) => {
     if (e.key === 'Enter') handleSend();
+  };
+
+  // 일정 생성하기
+  const handleSubmitAllAnswers = () => {
+    // user 메시지들만 골라내기
+    const userAnswers = { days: days, themeIds: themeIds };
+
+    console.log(userAnswers)
+    // 서버에 전체 답변 보내기
+    // fetch('/api/route', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ userAnswers })
+    // })
+    //     .then(res => {
+    //       if (!res.ok) throw new Error('서버 오류');
+    //       return res.json();
+    //     })
+    //     .then(data => {
+    //       // 전송 성공하면 페이지 이동
+    //       navigate("/map");
+    //     })
+    //     .catch(err => {
+    //       console.error('답변 전송 실패:', err);
+    //       alert('답변 전송에 실패했어요. 다시 시도해주세요.');
+    //     });
   };
 
   return (
@@ -98,7 +162,7 @@ const Chatting = () => {
               </MessageBubble>
           ))}
           <FloatingButton
-              onClick={() => navigate("/map")}
+              onClick={handleSubmitAllAnswers}
               disabled={currentStep < questions.length}
               style={{
                 backgroundColor: currentStep < questions.length ? '#666' : '#000',

@@ -12,7 +12,7 @@ const SideChat = () => {
                     <LogoImage src={logo} alt="로고" />SUNSUNTRIP
                 </LogoContainer>
 
-            </SidebarContainer>
+        </SidebarContainer>
     );
 };
 

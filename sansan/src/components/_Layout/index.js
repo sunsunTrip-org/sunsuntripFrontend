@@ -1,16 +1,13 @@
 import React from 'react';
 import SideChat from './SideChat';
-import SideMap from "./SideMap";
 import styled from 'styled-components';
 import {Routes, Route, Outlet} from "react-router-dom";
-// import { useLocation } from "react-router-dom";
 
 import "../style.css"
 import Chatting from '../../pages/chatting';
 import Map from '../../pages/map';
 
 const Index = () => {
-    // const location = useLocation();
 
     const DefaultLayout = () => {
         return (
@@ -31,7 +28,6 @@ const Index = () => {
         return (
             <LayoutContainer>
                 <Wrap style={{ maxWidth: '100%' }}>
-                    <SideMap />
                     <MapContentContainer>
                         <Outlet />
                     </MapContentContainer>
